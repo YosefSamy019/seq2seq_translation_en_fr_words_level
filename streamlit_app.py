@@ -64,7 +64,8 @@ def main():
 
     buttons_col = st.columns(5)
     if buttons_col[0].button('Translate', type='primary', use_container_width=True):
-        st.session_state['OUT'] = predict_long_sentence(input_text)
+        with st.spinner("Translating..."):
+            st.session_state['OUT'] = predict_long_sentence(input_text)
         st.rerun()
 
     if buttons_col[1].button('Clear', type='secondary', use_container_width=True):
