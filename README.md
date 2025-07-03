@@ -1,3 +1,5 @@
+---
+
 # 🌐 Sequence-to-Sequence Translation Model with Attention
 
 This project builds, trains, and serves a **Sequence-to-Sequence (Seq2Seq)** translation model (English ➡ French) using TensorFlow/Keras, attention mechanism, and a Streamlit web app for interactive translation.
@@ -18,125 +20,109 @@ This project builds, trains, and serves a **Sequence-to-Sequence (Seq2Seq)** tra
 
 ### 1️⃣ **Importing Libraries**
 
-The code starts by importing:
-
-* Data handling: `numpy`, `pandas`
-* Plotting: `matplotlib`, `seaborn`
-* Text processing: `re`, `json`, `pickle`
-* Neural networks: Keras layers (`LSTM`, `Embedding`, `Dense`, `Bidirectional`, etc.), models, and utils
+Loads essential Python and deep learning libraries for data handling, visualization, and model building.
 
 ### 2️⃣ **Constants & Config**
 
-Defines constants such as:
+Defines model configuration:
 
-* Max input/output lengths
+* Input/output sequence lengths
 * Embedding dimensions
-* Context vector length (LSTM hidden units)
-* Tokenizer configs (vocabulary size, OOV tokens)
+* Context vector length (LSTM units)
+* Tokenizer vocab size, special tokens
 * Paths for saving models, tokenizers, and outputs
 
 ### 3️⃣ **Dataset Preparation**
 
 * Loads English-French sentence pairs from `fra.txt`
-* Cleans text (lowercase, removes special characters, trims spaces)
-* Visualizes sentence lengths
-* Adds start (`START_TOKEN`) and end (`END_TOKEN`) tokens to target sentences
+* Cleans text (removes special characters, lowercases)
+* Adds `START_TOKEN` and `END_TOKEN`
+* Visualizes sentence length distributions
 
 ### 4️⃣ **Tokenization**
 
-* Tokenizers for input (English) and output (French) text
-* Converts text to sequences of integers
-* Pads sequences to fixed lengths
+* Creates and fits tokenizers
+* Converts text to integer sequences
+* Applies padding
 
 ### 5️⃣ **Model Architecture**
 
-* **Encoder:**
-
-  * Embedding + Bidirectional LSTM + LSTM (with state outputs)
-
-* **Decoder:**
-
-  * Embedding + two LSTM layers (with layer normalization and residual connection)
-
-* **Attention:**
-
-  * Computes attention weights (Dot product)
-  * Combines context vectors with decoder outputs
-  * Dense layer predicts next token
-
-* Final model combines encoder, decoder, and attention for training
+* **Encoder:** Embedding → BiLSTM → LSTM
+* **Decoder:** Embedding → stacked LSTMs with residuals + normalization
+* **Attention:** dot-product attention to align input and output sequences
+* **Training model:** combines encoder, decoder, and attention
 
 ### 6️⃣ **Training**
 
-* Compiled with `rmsprop` optimizer and `sparse_categorical_crossentropy` loss
-* Trains on padded sequences
-* Includes callbacks: early stopping and model checkpoint
+* Compiles with `rmsprop` + `sparse_categorical_crossentropy`
+* Trains with checkpointing and early stopping
 
-### 7️⃣ **Inference Models**
+### 7️⃣ **Inference**
 
-* Separates encoder, decoder, and attention into independent models for step-by-step decoding during inference
-* Defines a decoding loop that generates tokens until `END_TOKEN` is produced
+* Defines separate inference encoder, decoder, attention models
+* Implements step-by-step token generation
 
----
+### 8️⃣ **Streamlit App**
 
-## 🌐 Streamlit Web App
-
-### 📂 Files
-
-* `model_all.keras`: Saved combined model for inference
-* `x_tokenizer.pkl`, `y_tokenizer.pkl`: Tokenizers for input and output text
-
-### 🖥 App Features
-
-* Input: English text via a multi-line text area
-* Output: Translated French text (auto-populated)
-* Buttons:
-
-  * **Translate** — performs translation
-  * **Clear** — resets output
-
-### 🧠 Translation Logic
-
-* Splits input by special characters into segments
-* Each segment is cleaned, tokenized, and padded
-* Feeds into the model iteratively, appending predicted tokens
-* Stops on `END_TOKEN` or max length
+* Accepts English input
+* Segments + cleans text
+* Predicts French translation interactively
 
 ---
 
-## ⚙️ How to Run
+## 💻 Demo
 
-1️⃣ **Train the model** (in Colab or local Jupyter):
+👉 **Try the live demo:**
+[🌐 Streamlit Seq2Seq Translator (English ➡ French)](https://seq2seqtranslationenfrwordslevel-9snqxcwdzqz39iw3u63aud.streamlit.app/)
+
+
+---
+
+## 🖼️ Images
+
+### 📌 App Run
+
+![APP](run_image.png)
+
+### 📌 Training Model (Expanded Nested Layers)
+
+![Training Model Nested](training_model_show_nested.png)
+
+---
+
+## ⚙️ How to Run Locally
+
+1️⃣ **Train model**
 
 ```python
-# Run your notebook code (provided earlier)
+# Run provided notebook code
 ```
 
-2️⃣ **Save trained model and tokenizers**:
+2️⃣ **Save model/tokenizers**
 
 ```python
-# This is done in the notebook already using pickle and model.save()
+# Already done in notebook using pickle and model.save()
 ```
 
-3️⃣ **Run Streamlit app**:
+3️⃣ **Run Streamlit app**
 
 ```bash
 streamlit run app.py
 ```
 
-*(where `app.py` is your Streamlit script)*
-
 ---
 
 ## 📈 Outputs
 
-* Model training loss/accuracy plots
-* Trained model files: `.keras`, `.pkl`, `.json`
-* Streamlit app interface for real-time translation
+* Saved models: `model_all.keras`, `model_encoder.keras`, `model_decoder.keras`, `model_attention.keras`
+* Tokenizers: `x_tokenizer.pkl`, `y_tokenizer.pkl`
+* Token JSONs: `x_tokenizer_tokens_allowed.json`, `y_tokenizer_tokens_allowed.json`
+* Visualizations: model architecture PNGs, loss/accuracy plots
 
 ---
 
 ## 📝 Notes
 
-* The inference decoder uses the training model directly (for simplicity), but ideally, you can further refactor it to use the separated inference encoder/decoder.
-* Attention scores help the decoder focus on relevant input tokens at each decoding step.
+⚠ The inference could be further improved with beam search or other decoding strategies for better translation quality.
+
+---

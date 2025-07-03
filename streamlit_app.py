@@ -148,7 +148,7 @@ def predict_pure_text(input_str):
     if len(output_seq) > 0 and output_seq[-1] == END_TOKEN:
         del output_seq[-1]
 
-    while len(output_seq) > 0 and output_seq[-1] == Y_TOKENIZER_OOV_TOKEN:
+    while len(output_seq) > 1 and output_seq[-1] == Y_TOKENIZER_OOV_TOKEN:
         del output_seq[-1]
 
     return " ".join(output_seq)
