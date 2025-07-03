@@ -51,7 +51,7 @@ def main():
 
     main_cols = st.columns([0.48, 0.04, 0.48])
 
-    with st.progress():
+    with st.spinner("Loading data..."):
         load_resources()
 
     with main_cols[0]:
