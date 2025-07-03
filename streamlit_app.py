@@ -51,6 +51,9 @@ def main():
 
     main_cols = st.columns([0.48, 0.04, 0.48])
 
+    with st.progress():
+        load_resources()
+
     with main_cols[0]:
         with st.container(border=True):
             input_text = st.text_area('Enter English Text', height=UI_CONTAINER_HEIGHT)
